@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -16,6 +17,9 @@ namespace ProjetoInterdisciplinarII.Models
 
         [Column(TypeName = "text")]
         public string Conteudo { get; set; }
+
+        [Column(TypeName = "int"), DefaultValue(1)]
+        public string Ativo { get; set; }
 
         public List<Comentario> Comentarios { get; set; }
         public List<Curtida> Curtidas { get; set; }
