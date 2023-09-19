@@ -9,19 +9,26 @@ namespace ProjetoInterdisciplinarII.Models
         [Key]
         public int Id { get; set; }
 
-        [Column(TypeName = "varchar(255)")]
+        [Required]
+        [StringLength(255)]
         public string Titulo { get; set; }
 
-        [Column(TypeName = "varchar(255)")]
+        [Required]
+        [StringLength(255)]
         public string Imagem { get; set; }
 
-        [Column(TypeName = "text")]
+        [Required]
+        [MaxLength]
         public string Conteudo { get; set; }
 
-        [Column(TypeName = "int"), DefaultValue(1)]
-        public string Ativo { get; set; }
+        [Required]
+        public int Ativo { get; set; }
 
-        public List<Comentario> Comentarios { get; set; }
+        [ForeignKey("Usuario")]
+        public int IdUsuarioFk { get; set; }
+        public Usuario Usuario { get; set; }
+
         public List<Curtida> Curtidas { get; set; }
+        public List<Comentario> Comentarios { get; set; }
     }
 }

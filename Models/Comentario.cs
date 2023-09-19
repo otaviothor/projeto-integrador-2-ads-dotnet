@@ -8,9 +8,16 @@ namespace ProjetoInterdisciplinarII.Models
         [Key]
         public int Id { get; set; }
 
-        [Column(TypeName = "varchar(255)")]
+        [Required]
+        [StringLength(255)]
         public string Conteudo { get; set; }
 
+        [ForeignKey("Usuario")]
+        public int IdUsuarioFk { get; set; }
         public Usuario Usuario { get; set; }
+
+        [ForeignKey("Postagem")]
+        public int IdPostagemFk { get; set; }
+        public Postagem Postagem { get; set; }
     }
 }

@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -8,15 +9,12 @@ namespace ProjetoInterdisciplinarII.Models
         [Key]
         public int Id { get; set; }
 
-        [Column(TypeName = "varchar(255)")]
-        public string Titulo { get; set; }
-
-        [Column(TypeName = "varchar(255)")]
-        public string Imagem { get; set; }
-
-        [Column(TypeName = "text")]
-        public string Conteudo { get; set; }
-
+        [ForeignKey("Usuario")]
+        public int IdUsuarioFk { get; set; }
         public Usuario Usuario { get; set; }
+
+        [ForeignKey("Postagem")]
+        public int IdPostagemFk { get; set; }
+        public Postagem Postagem { get; set; }
     }
 }
