@@ -1,5 +1,4 @@
 using Microsoft.EntityFrameworkCore;
-using ProjetoInterdisciplinarII.Models;
 
 namespace ProjetoInterdisciplinarII.Models.Data
 {
