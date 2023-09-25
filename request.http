@@ -1,10 +1,37 @@
-@host = http://localhost:5249/api
+@host = http://localhost:5135/api
 
-### post /login
-POST {{host}}/login HTTP/1.1
+### consulta usuarios /usuarios
+GET {{host}}/usuarios HTTP/1.1
+
+### consulta usuario pelo id /usuarios/idusuario
+GET {{host}}/usuarios/4 HTTP/1.1
+
+### cadastro usuario /usuarios
+POST {{host}}/usuarios HTTP/1.1
 content-type: application/json
 
 {
-  "login": "otavio@gmail.com",
-  "senha": ""
+  "Nome": "Otávio Silva",
+  "Login": "otavio@gmail.com",
+  "Nivel": "LEI",
+  "Senha": "123456"
 }
+
+### login /usuarios/signin?login=seulogin@gmail.com&senha=suasenha
+GET {{host}}/usuarios/signin?login=otavio@gmail.com&senha=123456 HTTP/1.1
+
+# TODO nao funciona o PUT
+### atualizar usuario /usuarios
+PUT {{host}}/usuarios/1 HTTP/1.1 
+content-type: application/json
+
+{
+  "Nome": "Otávio asd",
+  "Login": "asd@gmail.com",
+  "Nivel": "asd",
+  "Senha": "123123"
+}
+
+### deletar usuario /usuarios/usuarios/4
+DELETE {{host}}/usuarios/5 HTTP/1.1
+

@@ -9,6 +9,12 @@ var app = builder.Build();
 app.MapGet("/api/usuarios", async (DataContext dbContext) =>
 {
   var usuarios = await dbContext.Usuarios.ToListAsync();
+
+  foreach (var usuario in usuarios)
+  {
+    usuario.Senha = null;
+  }
+
   return Results.Ok(usuarios);
 });
 
@@ -24,8 +30,10 @@ app.MapGet("/api/usuarios/{id}", async (int id, DataContext dbContext) =>
   var usuario = await dbContext.Usuarios.FindAsync(id);
   if (usuario == null)
   {
-    return Results.NotFound();
+    return Results.NotFound("Usuário ou senha incorretos");
   }
+
+  usuario.Senha = null;
   return Results.Ok(usuario);
 });
 
@@ -36,6 +44,11 @@ app.MapGet("/api/usuarios/signin", async (string login, string senha, DataContex
   {
     return Results.NotFound();
   }
+
+  usuario.Senha = null;
+  usuario.Postagens = null;
+  usuario.Curtidas = null;
+  usuario.Comentarios = null;
   return Results.Ok(usuario);
 });
 
