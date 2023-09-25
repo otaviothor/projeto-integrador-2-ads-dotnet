@@ -60,8 +60,13 @@ app.MapPut("/api/usuarios/{id}", async (int id, Usuario novoUsuario, DataContext
     return Results.NotFound();
   }
 
-  usuarioExistente = novoUsuario;
+  foreach (var prop in novoUsuario.GetType().GetProperties())
+  {
+    if (prop.GetValue(novoUsuario) != null && !prop.ToString().Contains("Id"))
+      prop.SetValue(usuarioExistente, prop.GetValue(novoUsuario));
+  }
 
+  dbContext.Usuarios.Update(usuarioExistente);
   await dbContext.SaveChangesAsync();
   return Results.NoContent();
 });

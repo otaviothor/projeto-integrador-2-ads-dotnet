@@ -27,11 +27,9 @@ content-type: application/json
 
 {
   "Nome": "Otávio asd",
-  "Login": "asd@gmail.com",
-  "Nivel": "asd",
-  "Senha": "123123"
+  "Login": "asd@gmail.com"
 }
 
 ### deletar usuario /usuarios/usuarios/4
-DELETE {{host}}/usuarios/5 HTTP/1.1
+DELETE {{host}}/usuarios/20 HTTP/1.1
 
