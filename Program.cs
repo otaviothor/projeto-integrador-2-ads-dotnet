@@ -6,6 +6,19 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<DataContext>();
 var app = builder.Build();
 
+
+app.MapGet("/api/usuarios/signin", async (string login, string senha, DataContext dbContext) =>
+{
+  var usuario = await dbContext.Usuarios.FirstOrDefaultAsync(u => u.Login == login && u.Senha == senha);
+  if (usuario == null)
+  {
+    return Results.NotFound();
+  }
+
+  usuario.Senha = null;
+  return Results.Ok(usuario);
+});
+
 app.MapGet("/api/usuarios", async (DataContext dbContext) =>
 {
   var usuarios = await dbContext.Usuarios.ToListAsync();
@@ -16,13 +29,6 @@ app.MapGet("/api/usuarios", async (DataContext dbContext) =>
   }
 
   return Results.Ok(usuarios);
-});
-
-app.MapPost("/api/usuarios", async (Usuario usuario, DataContext dbContext) =>
-{
-  dbContext.Usuarios.Add(usuario);
-  await dbContext.SaveChangesAsync();
-  return Results.Created($"/api/usuarios/{usuario.Id}", usuario);
 });
 
 app.MapGet("/api/usuarios/{id}", async (int id, DataContext dbContext) =>
@@ -37,19 +43,11 @@ app.MapGet("/api/usuarios/{id}", async (int id, DataContext dbContext) =>
   return Results.Ok(usuario);
 });
 
-app.MapGet("/api/usuarios/signin", async (string login, string senha, DataContext dbContext) =>
+app.MapPost("/api/usuarios", async (Usuario usuario, DataContext dbContext) =>
 {
-  var usuario = await dbContext.Usuarios.FirstOrDefaultAsync(u => u.Login == login && u.Senha == senha);
-  if (usuario == null)
-  {
-    return Results.NotFound();
-  }
-
-  usuario.Senha = null;
-  usuario.Postagens = null;
-  usuario.Curtidas = null;
-  usuario.Comentarios = null;
-  return Results.Ok(usuario);
+  dbContext.Usuarios.Add(usuario);
+  await dbContext.SaveChangesAsync();
+  return Results.Created($"/api/usuarios/{usuario.Id}", usuario);
 });
 
 app.MapPut("/api/usuarios/{id}", async (int id, Usuario novoUsuario, DataContext dbContext) =>
@@ -84,25 +82,19 @@ app.MapDelete("/api/usuarios/{id}", async (int id, DataContext dbContext) =>
   return Results.NoContent();
 });
 
+// 
+// 
+// 
+
 app.MapGet("/api/postagens", async (DataContext dbContext) =>
 {
   var postagens = await dbContext.Postagens.ToListAsync();
   return Results.Ok(postagens);
 });
 
-app.MapPost("/api/postagens", async (Postagem postagem, DataContext dbContext) =>
-{
-  dbContext.Postagens.Add(postagem);
-  await dbContext.SaveChangesAsync();
-  return Results.Created($"/api/postagens/{postagem.Id}", postagem);
-});
-
 app.MapGet("/api/postagens/{id}", async (int id, DataContext dbContext) =>
 {
-  var postagem = await dbContext.Postagens
-      .Include(p => p.Curtidas)
-      .Include(p => p.Comentarios)
-      .SingleOrDefaultAsync(p => p.Id == id);
+  var postagem = await dbContext.Postagens.FindAsync(id);
 
   if (postagem == null)
   {
@@ -121,6 +113,13 @@ app.MapGet("/api/postagens/usuario/{idUsuario}", async (int idUsuario, DataConte
   return Results.Ok(postagensDoUsuario);
 });
 
+app.MapPost("/api/postagens", async (Postagem postagem, DataContext dbContext) =>
+{
+  dbContext.Postagens.Add(postagem);
+  await dbContext.SaveChangesAsync();
+  return Results.Created($"/api/postagens/{postagem.Id}", postagem);
+});
+
 app.MapPut("/api/postagens/{id}", async (int id, Postagem novaPostagem, DataContext dbContext) =>
 {
   var postagemExistente = await dbContext.Postagens.FindAsync(id);
@@ -129,8 +128,13 @@ app.MapPut("/api/postagens/{id}", async (int id, Postagem novaPostagem, DataCont
     return Results.NotFound();
   }
 
-  postagemExistente = novaPostagem;
+  foreach (var prop in novaPostagem.GetType().GetProperties())
+  {
+    if (prop.GetValue(novaPostagem) != null && !prop.ToString().Contains("Id"))
+      prop.SetValue(postagemExistente, prop.GetValue(novaPostagem));
+  }
 
+  dbContext.Postagens.Update(postagemExistente);
   await dbContext.SaveChangesAsync();
   return Results.NoContent();
 });
@@ -146,6 +150,28 @@ app.MapDelete("/api/postagens/{id}", async (int id, DataContext dbContext) =>
   dbContext.Postagens.Remove(postagem);
   await dbContext.SaveChangesAsync();
   return Results.NoContent();
+});
+
+// 
+// 
+// 
+
+app.MapGet("/api/curtidas/usuario/{idUsuario}", async (int idUsuario, DataContext dbContext) =>
+{
+  var curtidasDoUsuario = await dbContext.Curtidas
+      .Where(c => c.IdUsuarioFk == idUsuario)
+      .ToListAsync();
+
+  return Results.Ok(curtidasDoUsuario);
+});
+
+app.MapGet("/api/curtidas/postagem/{idPostagem}", async (int idPostagem, DataContext dbContext) =>
+{
+  var curtidasDaPostagem = await dbContext.Curtidas
+      .Where(c => c.IdPostagemFk == idPostagem)
+      .ToListAsync();
+
+  return Results.Ok(curtidasDaPostagem);
 });
 
 app.MapPost("/api/curtidas", async (Curtida curtida, DataContext dbContext) =>
@@ -166,6 +192,28 @@ app.MapDelete("/api/curtidas/{id}", async (int id, DataContext dbContext) =>
   dbContext.Curtidas.Remove(curtida);
   await dbContext.SaveChangesAsync();
   return Results.NoContent();
+});
+
+// 
+// 
+// 
+
+app.MapGet("/api/comentarios/usuario/{idUsuario}", async (int idUsuario, DataContext dbContext) =>
+{
+  var comentariosDoUsuario = await dbContext.Comentarios
+      .Where(c => c.IdUsuarioFk == idUsuario)
+      .ToListAsync();
+
+  return Results.Ok(comentariosDoUsuario);
+});
+
+app.MapGet("/api/comentarios/postagem/{idPostagem}", async (int idPostagem, DataContext dbContext) =>
+{
+  var comentariosDaPostagem = await dbContext.Comentarios
+      .Where(c => c.IdPostagemFk == idPostagem)
+      .ToListAsync();
+
+  return Results.Ok(comentariosDaPostagem);
 });
 
 app.MapPost("/api/comentarios", async (Comentario comentario, DataContext dbContext) =>

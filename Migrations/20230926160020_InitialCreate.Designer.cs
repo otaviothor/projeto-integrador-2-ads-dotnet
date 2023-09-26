@@ -10,7 +10,7 @@ using ProjetoInterdisciplinarII.Models.Data;
 namespace ProjetoInterdisciplinarII.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20230925023549_InitialCreate")]
+    [Migration("20230926160020_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -38,10 +38,6 @@ namespace ProjetoInterdisciplinarII.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("IdPostagemFk");
-
-                    b.HasIndex("IdUsuarioFk");
-
                     b.ToTable("Comentarios");
                 });
 
@@ -58,10 +54,6 @@ namespace ProjetoInterdisciplinarII.Migrations
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("IdPostagemFk");
-
-                    b.HasIndex("IdUsuarioFk");
 
                     b.ToTable("Curtidas");
                 });
@@ -93,8 +85,6 @@ namespace ProjetoInterdisciplinarII.Migrations
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("IdUsuarioFk");
 
                     b.ToTable("Postagens");
                 });
@@ -128,71 +118,6 @@ namespace ProjetoInterdisciplinarII.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Usuarios");
-                });
-
-            modelBuilder.Entity("ProjetoInterdisciplinarII.Models.Comentario", b =>
-                {
-                    b.HasOne("ProjetoInterdisciplinarII.Models.Postagem", "Postagem")
-                        .WithMany("Comentarios")
-                        .HasForeignKey("IdPostagemFk")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("ProjetoInterdisciplinarII.Models.Usuario", "Usuario")
-                        .WithMany("Comentarios")
-                        .HasForeignKey("IdUsuarioFk")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Postagem");
-
-                    b.Navigation("Usuario");
-                });
-
-            modelBuilder.Entity("ProjetoInterdisciplinarII.Models.Curtida", b =>
-                {
-                    b.HasOne("ProjetoInterdisciplinarII.Models.Postagem", "Postagem")
-                        .WithMany("Curtidas")
-                        .HasForeignKey("IdPostagemFk")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("ProjetoInterdisciplinarII.Models.Usuario", "Usuario")
-                        .WithMany("Curtidas")
-                        .HasForeignKey("IdUsuarioFk")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Postagem");
-
-                    b.Navigation("Usuario");
-                });
-
-            modelBuilder.Entity("ProjetoInterdisciplinarII.Models.Postagem", b =>
-                {
-                    b.HasOne("ProjetoInterdisciplinarII.Models.Usuario", "Usuario")
-                        .WithMany("Postagens")
-                        .HasForeignKey("IdUsuarioFk")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Usuario");
-                });
-
-            modelBuilder.Entity("ProjetoInterdisciplinarII.Models.Postagem", b =>
-                {
-                    b.Navigation("Comentarios");
-
-                    b.Navigation("Curtidas");
-                });
-
-            modelBuilder.Entity("ProjetoInterdisciplinarII.Models.Usuario", b =>
-                {
-                    b.Navigation("Comentarios");
-
-                    b.Navigation("Curtidas");
-
-                    b.Navigation("Postagens");
                 });
 #pragma warning restore 612, 618
         }

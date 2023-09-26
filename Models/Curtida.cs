@@ -11,10 +11,8 @@ namespace ProjetoInterdisciplinarII.Models
 
         [ForeignKey("Usuario")]
         public int IdUsuarioFk { get; set; }
-        public Usuario Usuario { get; set; }
 
         [ForeignKey("Postagem")]
         public int IdPostagemFk { get; set; }
-        public Postagem Postagem { get; set; }
     }
 }

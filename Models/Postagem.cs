@@ -22,13 +22,10 @@ namespace ProjetoInterdisciplinarII.Models
         public string Conteudo { get; set; }
 
         [Required]
+        [DefaultValue(0)]
         public int Ativo { get; set; }
 
         [ForeignKey("Usuario")]
         public int IdUsuarioFk { get; set; }
-        public Usuario Usuario { get; set; }
-
-        public List<Curtida> Curtidas { get; set; }
-        public List<Comentario> Comentarios { get; set; }
     }
 }

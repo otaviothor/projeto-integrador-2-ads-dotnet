@@ -4,7 +4,7 @@
 GET {{host}}/usuarios HTTP/1.1
 
 ### consulta usuario pelo id /usuarios/idusuario
-GET {{host}}/usuarios/4 HTTP/1.1
+GET {{host}}/usuarios/1 HTTP/1.1
 
 ### cadastro usuario /usuarios
 POST {{host}}/usuarios HTTP/1.1
@@ -20,7 +20,6 @@ content-type: application/json
 ### login /usuarios/signin?login=seulogin@gmail.com&senha=suasenha
 GET {{host}}/usuarios/signin?login=otavio@gmail.com&senha=123456 HTTP/1.1
 
-# TODO nao funciona o PUT
 ### atualizar usuario /usuarios
 PUT {{host}}/usuarios/1 HTTP/1.1 
 content-type: application/json
@@ -33,3 +32,25 @@ content-type: application/json
 ### deletar usuario /usuarios/usuarios/4
 DELETE {{host}}/usuarios/20 HTTP/1.1
 
+######################################################################
+
+### consulta postagens /postagens
+GET {{host}}/postagens HTTP/1.1
+
+### consulta postagens por id /postagens/idpostagem
+GET {{host}}/postagens/2 HTTP/1.1
+
+### consulta postagens por id do escritor /postagens/usuario/idusuario
+GET {{host}}/postagens/usuario/1 HTTP/1.1
+
+### cadastro usuario /usuarios
+POST {{host}}/postagens HTTP/1.1
+content-type: application/json
+
+{
+  "Titulo": "Ferrari Formula One",
+  "Imagem": "https://w0.peakpx.com/wallpaper/213/728/HD-wallpaper-2022-ferrari-f1-75-formula-1-open-top-race-car-turbo-v6.jpg",
+  "Conteudo": "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Aut repellendus dolores reprehenderit facilis maxime aperiam a, at necessitatibus illo earum. Sit amet, eligendi impedit mollitia eos eius magni quas. Pariatur quasi assumenda exercitationem dicta fuga? Delectus enim consectetur illo magni porro unde illum, id temporibus rerum amet, incidunt quos vero praesentium voluptatem numquam, eligendi cumque. Praesentium illo iure facilis. Hic vel veniam esse, dicta saepe totam repudiandae natus quaerat enim magni dolorem beatae a itaque assumenda voluptate minima impedit quae ab tempora quidem vero. Eum ratione velit rem non consequuntur perspiciatis quibusdam explicabo blanditiis illum veniam at, quos consequatur facilis.",
+  "Ativo": 0,
+  "IdUsuarioFk": 1
+}
