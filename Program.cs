@@ -4,8 +4,19 @@ using ProjetoInterdisciplinarII.Models.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<DataContext>();
-var app = builder.Build();
+builder.Services.AddCors(options =>
+{
+  options.AddPolicy("MyAllowedOrigins",
+      policy =>
+      {
+        policy.AllowAnyOrigin()
+          .AllowAnyHeader()
+          .AllowAnyMethod();
+      });
+});
 
+var app = builder.Build();
+app.UseCors("MyAllowedOrigins");
 
 app.MapGet("/api/usuarios/signin", async (string login, string senha, DataContext dbContext) =>
 {
@@ -19,28 +30,29 @@ app.MapGet("/api/usuarios/signin", async (string login, string senha, DataContex
   return Results.Ok(usuario);
 });
 
-app.MapGet("/api/usuarios", async (DataContext dbContext) =>
+app.MapGet("/api/usuarios", async (string? ids, DataContext dbContext) =>
 {
-  var usuarios = await dbContext.Usuarios.ToListAsync();
+  if (ids == null)
+  {
+    var usuarios = await dbContext.Usuarios.ToListAsync();
 
-  foreach (var usuario in usuarios)
+    foreach (var usuario in usuarios)
+    {
+      usuario.Senha = null;
+    }
+
+    return Results.Ok(usuarios);
+  }
+
+  var splittedIds = ids.Split(',').Select(int.Parse).ToList();
+  var usuariosPeloId = dbContext.Usuarios.Where(x => splittedIds.Contains(x.Id)).ToList();
+
+  foreach (var usuario in usuariosPeloId)
   {
     usuario.Senha = null;
   }
 
-  return Results.Ok(usuarios);
-});
-
-app.MapGet("/api/usuarios/{id}", async (int id, DataContext dbContext) =>
-{
-  var usuario = await dbContext.Usuarios.FindAsync(id);
-  if (usuario == null)
-  {
-    return Results.NotFound("Usuário ou senha incorretos");
-  }
-
-  usuario.Senha = null;
-  return Results.Ok(usuario);
+  return Results.Ok(usuariosPeloId);
 });
 
 app.MapPost("/api/usuarios", async (Usuario usuario, DataContext dbContext) =>
