@@ -23,7 +23,7 @@ app.MapGet("/api/usuarios/signin", async (string login, string senha, DataContex
   var usuario = await dbContext.Usuarios.FirstOrDefaultAsync(u => u.Login == login && u.Senha == senha);
   if (usuario == null)
   {
-    return Results.NotFound();
+    return Results.NotFound("Usuário ou senha incorretos");
   }
 
   usuario.Senha = null;
@@ -57,8 +57,17 @@ app.MapGet("/api/usuarios", async (string? ids, DataContext dbContext) =>
 
 app.MapPost("/api/usuarios", async (Usuario usuario, DataContext dbContext) =>
 {
+
+  var userExists = await dbContext.Usuarios.FirstOrDefaultAsync(x => x.Login == usuario.Login);
+
+  if (userExists != null)
+  {
+    return Results.Conflict("Já existe um usuário com esse login. Tente outro");
+  }
+
   dbContext.Usuarios.Add(usuario);
   await dbContext.SaveChangesAsync();
+  usuario.Senha = null;
   return Results.Created($"/api/usuarios/{usuario.Id}", usuario);
 });
 

@@ -3,8 +3,8 @@
 ### consulta usuarios /usuarios
 GET {{host}}/usuarios HTTP/1.1
 
-### consulta usuario pelo id /usuarios/idusuario
-GET {{host}}/usuarios/1 HTTP/1.1
+### consulta usuario pelos ids /usuarios?ids=id1,id2,id13
+GET {{host}}/usuarios?ids=1,4,10 HTTP/1.1
 
 ### cadastro usuario /usuarios
 POST {{host}}/usuarios HTTP/1.1
@@ -12,7 +12,7 @@ content-type: application/json
 
 {
   "Nome": "Otávio Silva",
-  "Login": "otavio@gmail.com",
+  "Login": "otavio1@gmail.com",
   "Nivel": "LEI",
   "Senha": "123456"
 }
@@ -30,7 +30,7 @@ content-type: application/json
 }
 
 ### deletar usuario /usuarios/usuarios/4
-DELETE {{host}}/usuarios/20 HTTP/1.1
+DELETE {{host}}/usuarios/11 HTTP/1.1
 
 ######################################################################
 
