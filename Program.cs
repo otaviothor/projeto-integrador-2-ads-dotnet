@@ -107,8 +107,14 @@ app.MapDelete("/api/usuarios/{id}", async (int id, DataContext dbContext) =>
 // 
 // 
 
-app.MapGet("/api/postagens", async (DataContext dbContext) =>
+app.MapGet("/api/postagens", async (bool? last, DataContext dbContext) =>
 {
+  if (last == true)
+  {
+    var postagem = dbContext.Postagens.OrderBy(x => x.Id).LastOrDefault();
+    return Results.Ok(postagem);
+  }
+
   var postagens = await dbContext.Postagens.ToListAsync();
   return Results.Ok(postagens);
 });

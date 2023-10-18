@@ -35,7 +35,7 @@ DELETE {{host}}/usuarios/11 HTTP/1.1
 ######################################################################
 
 ### consulta postagens /postagens
-GET {{host}}/postagens HTTP/1.1
+GET {{host}}/postagens?last=false HTTP/1.1
 
 ### consulta postagens por id /postagens/idpostagem
 GET {{host}}/postagens/2 HTTP/1.1
@@ -48,9 +48,27 @@ POST {{host}}/postagens HTTP/1.1
 content-type: application/json
 
 {
-  "Titulo": "Ferrari Formula One",
+  "Titulo": "Ferrari Formula One 123",
   "Imagem": "https://w0.peakpx.com/wallpaper/213/728/HD-wallpaper-2022-ferrari-f1-75-formula-1-open-top-race-car-turbo-v6.jpg",
-  "Conteudo": "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Aut repellendus dolores reprehenderit facilis maxime aperiam a, at necessitatibus illo earum. Sit amet, eligendi impedit mollitia eos eius magni quas. Pariatur quasi assumenda exercitationem dicta fuga? Delectus enim consectetur illo magni porro unde illum, id temporibus rerum amet, incidunt quos vero praesentium voluptatem numquam, eligendi cumque. Praesentium illo iure facilis. Hic vel veniam esse, dicta saepe totam repudiandae natus quaerat enim magni dolorem beatae a itaque assumenda voluptate minima impedit quae ab tempora quidem vero. Eum ratione velit rem non consequuntur perspiciatis quibusdam explicabo blanditiis illum veniam at, quos consequatur facilis.",
+  "Conteudo": "<p>Explicando um pouco sobre o código acima, a estrutura básica é a mesma do arquivo <code>index.js</code>, nós exportamos uma função com o nome <code>Pokemon</code> e a única coisa mais diferente é que importamos um hook chamado <code>useRouter()</code> do pacote do Next.js e através dela, conseguimos pegar o parâmetro dinâmico que vem da rota. Também já adiantei e criei uma função que vai pegar os dados do Pokémon que queremos ver através da API e armazenei os dados num <code>useState()</code>. Se clicarmos no primeiro Pokémon da tela inicial, teremos algo parecido com essa rota <code>http://localhost:3000/pokemon/bulbasaur</code>, e veremos o seguinte conteúdo na tela de detalhes:</p>",
   "Ativo": 0,
-  "IdUsuarioFk": 1
+  "IdUsuarioFk": 6
+}
+
+### deleta postagem por id /postagens/idpostagem
+DELETE {{host}}/postagens/9 HTTP/1.1
+
+######################################################################
+
+### consulta postagens /postagens
+GET {{host}}/postagens?last=false HTTP/1.1
+
+### cadastro comentarios /comentarios
+POST {{host}}/comentarios HTTP/1.1
+content-type: application/json
+
+{
+  "Conteudo": "Explicando um pouco sobre o código acima, a estrutura básica é a mesma do arquivo, nós exportamos uma função com o nome",
+  "IdUsuarioFk": 6,
+  "idPostagemFk": 15
 }
