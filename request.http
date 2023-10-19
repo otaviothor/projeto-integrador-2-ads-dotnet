@@ -1,12 +1,12 @@
 @host = http://localhost:5135/api
 
-### consulta usuarios /usuarios
+### consulta usuarios 
 GET {{host}}/usuarios HTTP/1.1
 
-### consulta usuario pelos ids /usuarios?ids=id1,id2,id13
+### consulta usuario pelos ids 
 GET {{host}}/usuarios?ids=1,4,10 HTTP/1.1
 
-### cadastro usuario /usuarios
+### cadastro usuario 
 POST {{host}}/usuarios HTTP/1.1
 content-type: application/json
 
@@ -17,10 +17,10 @@ content-type: application/json
   "Senha": "123456"
 }
 
-### login /usuarios/signin?login=seulogin@gmail.com&senha=suasenha
+### login 
 GET {{host}}/usuarios/signin?login=otavio@gmail.com&senha=123456 HTTP/1.1
 
-### atualizar usuario /usuarios
+### atualizar usuario 
 PUT {{host}}/usuarios/1 HTTP/1.1 
 content-type: application/json
 
@@ -29,21 +29,21 @@ content-type: application/json
   "Login": "asd@gmail.com"
 }
 
-### deletar usuario /usuarios/usuarios/4
+### deletar usuario 
 DELETE {{host}}/usuarios/11 HTTP/1.1
 
 ######################################################################
 
-### consulta postagens /postagens
+### consulta postagens 
 GET {{host}}/postagens?last=false HTTP/1.1
 
-### consulta postagens por id /postagens/idpostagem
+### consulta postagens por id 
 GET {{host}}/postagens/2 HTTP/1.1
 
-### consulta postagens por id do escritor /postagens/usuario/idusuario
+### consulta postagens por id do escritor 
 GET {{host}}/postagens/usuario/1 HTTP/1.1
 
-### cadastro usuario /usuarios
+### cadastro usuario 
 POST {{host}}/postagens HTTP/1.1
 content-type: application/json
 
@@ -55,20 +55,39 @@ content-type: application/json
   "IdUsuarioFk": 6
 }
 
-### deleta postagem por id /postagens/idpostagem
+### deleta postagem por id 
 DELETE {{host}}/postagens/9 HTTP/1.1
 
 ######################################################################
 
-### consulta postagens /postagens
-GET {{host}}/postagens?last=false HTTP/1.1
+### consultar comentarios pelo id da postagem 
+GET {{host}}/curtidas/postagem/15 HTTP/1.1
 
-### cadastro comentarios /comentarios
+### criar curtida 
+POST {{host}}/curtidas HTTP/1.1
+content-type: application/json
+
+{
+  "idPostagemFk": 15,
+  "IdUsuarioFk": 6
+}
+
+### excluir curtida 
+DELETE {{host}}/curtidas/32 HTTP/1.1
+
+######################################################################
+
+### consultar comentarios pelo id da postagem 
+GET {{host}}/comentarios/postagem/15 HTTP/1.1
+
+### excluir comentarios 
+DELETE {{host}}/comentarios/11 HTTP/1.1
+
+### cadastro comentarios 
 POST {{host}}/comentarios HTTP/1.1
 content-type: application/json
 
 {
   "Conteudo": "Explicando um pouco sobre o código acima, a estrutura básica é a mesma do arquivo, nós exportamos uma função com o nome",
-  "IdUsuarioFk": 6,
   "idPostagemFk": 15
 }
