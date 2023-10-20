@@ -4,7 +4,7 @@
 GET {{host}}/usuarios HTTP/1.1
 
 ### consulta usuario pelos ids 
-GET {{host}}/usuarios?ids=1,4,10 HTTP/1.1
+GET {{host}}/usuarios?ids=6 HTTP/1.1
 
 ### cadastro usuario 
 POST {{host}}/usuarios HTTP/1.1
@@ -35,15 +35,15 @@ DELETE {{host}}/usuarios/11 HTTP/1.1
 ######################################################################
 
 ### consulta postagens 
-GET {{host}}/postagens?last=false HTTP/1.1
+GET {{host}}/postagens?last=false&inactive=true HTTP/1.1
 
 ### consulta postagens por id 
-GET {{host}}/postagens/2 HTTP/1.1
+GET {{host}}/postagens/15 HTTP/1.1
 
 ### consulta postagens por id do escritor 
-GET {{host}}/postagens/usuario/1 HTTP/1.1
+GET {{host}}/postagens/usuario/6?inactive=true HTTP/1.1
 
-### cadastro usuario 
+### cadastro postagem 
 POST {{host}}/postagens HTTP/1.1
 content-type: application/json
 
@@ -51,12 +51,20 @@ content-type: application/json
   "Titulo": "Ferrari Formula One 123",
   "Imagem": "https://w0.peakpx.com/wallpaper/213/728/HD-wallpaper-2022-ferrari-f1-75-formula-1-open-top-race-car-turbo-v6.jpg",
   "Conteudo": "<p>Explicando um pouco sobre o código acima, a estrutura básica é a mesma do arquivo <code>index.js</code>, nós exportamos uma função com o nome <code>Pokemon</code> e a única coisa mais diferente é que importamos um hook chamado <code>useRouter()</code> do pacote do Next.js e através dela, conseguimos pegar o parâmetro dinâmico que vem da rota. Também já adiantei e criei uma função que vai pegar os dados do Pokémon que queremos ver através da API e armazenei os dados num <code>useState()</code>. Se clicarmos no primeiro Pokémon da tela inicial, teremos algo parecido com essa rota <code>http://localhost:3000/pokemon/bulbasaur</code>, e veremos o seguinte conteúdo na tela de detalhes:</p>",
-  "Ativo": 0,
+  "Ativo": 1,
   "IdUsuarioFk": 6
 }
 
+### atualiza postagem 
+PUT {{host}}/postagens/15 HTTP/1.1
+content-type: application/json
+
+{
+  "Ativo": 1
+}
+
 ### deleta postagem por id 
-DELETE {{host}}/postagens/9 HTTP/1.1
+DELETE {{host}}/postagens/24 HTTP/1.1
 
 ######################################################################
 
@@ -69,11 +77,11 @@ content-type: application/json
 
 {
   "idPostagemFk": 15,
-  "IdUsuarioFk": 6
+  "IdUsuarioFk": 1
 }
 
 ### excluir curtida 
-DELETE {{host}}/curtidas/32 HTTP/1.1
+DELETE {{host}}/curtidas/34 HTTP/1.1
 
 ######################################################################
 

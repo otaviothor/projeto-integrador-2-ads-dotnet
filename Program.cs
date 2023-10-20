@@ -2,6 +2,8 @@ using Microsoft.EntityFrameworkCore;
 using ProjetoInterdisciplinarII.Models;
 using ProjetoInterdisciplinarII.Models.Data;
 
+// TODO excluir comentarios e curtidas quando apagar post
+
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<DataContext>();
 builder.Services.AddCors(options =>
@@ -107,15 +109,20 @@ app.MapDelete("/api/usuarios/{id}", async (int id, DataContext dbContext) =>
 // 
 // 
 
-app.MapGet("/api/postagens", async (bool? last, DataContext dbContext) =>
+app.MapGet("/api/postagens", async (bool? last, bool? inactive, DataContext dbContext) =>
 {
   if (last == true)
   {
-    var postagem = dbContext.Postagens.OrderBy(x => x.Id).LastOrDefault();
+    var postagem = dbContext.Postagens.Where(x => x.Ativo == 1).OrderBy(x => x.Id).LastOrDefault();
     return Results.Ok(postagem);
   }
+  else if (inactive == true)
+  {
+    var todasPostagens = await dbContext.Postagens.ToListAsync();
+    return Results.Ok(todasPostagens);
+  }
 
-  var postagens = await dbContext.Postagens.ToListAsync();
+  var postagens = await dbContext.Postagens.Where(x => x.Ativo == 1).ToListAsync();
   return Results.Ok(postagens);
 });
 
@@ -131,13 +138,22 @@ app.MapGet("/api/postagens/{id}", async (int id, DataContext dbContext) =>
   return Results.Ok(postagem);
 });
 
-app.MapGet("/api/postagens/usuario/{idUsuario}", async (int idUsuario, DataContext dbContext) =>
+app.MapGet("/api/postagens/usuario/{idUsuario}", async (int idUsuario, bool? inactive, DataContext dbContext) =>
 {
-  var postagensDoUsuario = await dbContext.Postagens
-      .Where(p => p.IdUsuarioFk == idUsuario)
-      .ToListAsync();
+  if (inactive == true)
+  {
+    var postagensDoUsuario = await dbContext.Postagens
+        .Where(p => p.IdUsuarioFk == idUsuario)
+        .ToListAsync();
 
-  return Results.Ok(postagensDoUsuario);
+    return Results.Ok(postagensDoUsuario);
+  }
+
+  var postagensAtivasDoUsuario = await dbContext.Postagens
+        .Where(p => p.IdUsuarioFk == idUsuario && p.Ativo == 1)
+        .ToListAsync();
+
+  return Results.Ok(postagensAtivasDoUsuario);
 });
 
 app.MapPost("/api/postagens", async (Postagem postagem, DataContext dbContext) =>
