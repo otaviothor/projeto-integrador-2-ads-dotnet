@@ -2,7 +2,6 @@ using Microsoft.EntityFrameworkCore;
 using ProjetoInterdisciplinarII.Models;
 using ProjetoInterdisciplinarII.Models.Data;
 
-// TODO excluir comentarios e curtidas quando apagar post
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<DataContext>();
@@ -189,8 +188,21 @@ app.MapDelete("/api/postagens/{id}", async (int id, DataContext dbContext) =>
   {
     return Results.NotFound();
   }
+  var comentarios = await dbContext.Comentarios.Where(c => c.IdPostagemFk == postagem.Id).ToListAsync();
+  var curtidas = await dbContext.Curtidas.Where(c => c.IdPostagemFk == postagem.Id).ToListAsync();
 
   dbContext.Postagens.Remove(postagem);
+
+  foreach (var comentario in comentarios)
+  {
+    dbContext.Comentarios.Remove(comentario);
+  }
+
+  foreach (var curtida in curtidas)
+  {
+    dbContext.Curtidas.Remove(curtida);
+  }
+
   await dbContext.SaveChangesAsync();
   return Results.NoContent();
 });
@@ -240,6 +252,13 @@ app.MapDelete("/api/curtidas/{id}", async (int id, DataContext dbContext) =>
 // 
 // 
 // 
+
+app.MapGet("/api/comentarios", async (DataContext dbContext) =>
+{
+  var comentariosDoUsuario = await dbContext.Comentarios.ToListAsync();
+
+  return Results.Ok(comentariosDoUsuario);
+});
 
 app.MapGet("/api/comentarios/usuario/{idUsuario}", async (int idUsuario, DataContext dbContext) =>
 {
