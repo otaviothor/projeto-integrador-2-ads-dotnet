@@ -37,7 +37,7 @@ DELETE {{host}}/usuarios/5 HTTP/1.1
 GET {{host}}/postagens?last=false&inactive=true HTTP/1.1
 
 ### consulta postagens por id 
-GET {{host}}/postagens/15 HTTP/1.1
+GET {{host}}/postagens?ids=40 HTTP/1.1
 
 ### consulta postagens por id do escritor 
 GET {{host}}/postagens/usuario/1?inactive=true HTTP/1.1
@@ -50,8 +50,8 @@ content-type: application/json
   "Titulo": "Ferrari Formula One",
   "Imagem": "https://w0.peakpx.com/wallpaper/213/728/HD-wallpaper-2022-ferrari-f1-75-formula-1-open-top-race-car-turbo-v6.jpg",
   "Conteudo": "<p>Explicando um pouco sobre o código acima, a estrutura básica é a mesma do arquivo <code>index.js</code>, nós exportamos uma função com o nome <code>Pokemon</code> e a única coisa mais diferente é que importamos um hook chamado <code>useRouter()</code> do pacote do Next.js e através dela, conseguimos pegar o parâmetro dinâmico que vem da rota. Também já adiantei e criei uma função que vai pegar os dados do Pokémon que queremos ver através da API e armazenei os dados num <code>useState()</code>. Se clicarmos no primeiro Pokémon da tela inicial, teremos algo parecido com essa rota <code>http://localhost:3000/pokemon/bulbasaur</code>, e veremos o seguinte conteúdo na tela de detalhes:</p>",
-  "Ativo": 0,
-  "IdUsuarioFk": 3
+  "Ativo": 1,
+  "IdUsuarioFk": 6
 }
 
 ### atualiza postagem 
@@ -63,7 +63,7 @@ content-type: application/json
 }
 
 ### deleta postagem por id 
-DELETE {{host}}/postagens/24 HTTP/1.1
+DELETE {{host}}/postagens/30 HTTP/1.1
 
 ######################################################################
 

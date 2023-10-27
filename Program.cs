@@ -80,6 +80,16 @@ app.MapPut("/api/usuarios/{id}", async (int id, Usuario novoUsuario, DataContext
     return Results.NotFound();
   }
 
+  if (usuarioExistente.Login != novoUsuario.Login)
+  {
+    var userExists = await dbContext.Usuarios.FirstOrDefaultAsync(x => x.Login == novoUsuario.Login);
+
+    if (userExists != null)
+    {
+      return Results.Conflict("Já existe um usuário com esse login. Tente outro");
+    }
+  }
+
   foreach (var prop in novoUsuario.GetType().GetProperties())
   {
     if (prop.GetValue(novoUsuario) != null && !prop.ToString().Contains("Id"))
@@ -108,33 +118,30 @@ app.MapDelete("/api/usuarios/{id}", async (int id, DataContext dbContext) =>
 // 
 // 
 
-app.MapGet("/api/postagens", async (bool? last, bool? inactive, DataContext dbContext) =>
+app.MapGet("/api/postagens", async (bool? last, bool? inactive, string? ids, DataContext dbContext) =>
 {
   if (last == true)
   {
     var postagem = dbContext.Postagens.Where(x => x.Ativo == 1).OrderBy(x => x.Id).LastOrDefault();
     return Results.Ok(postagem);
   }
-  else if (inactive == true)
+
+  if (inactive == true)
   {
     var todasPostagens = await dbContext.Postagens.ToListAsync();
     return Results.Ok(todasPostagens);
   }
 
-  var postagens = await dbContext.Postagens.Where(x => x.Ativo == 1).ToListAsync();
-  return Results.Ok(postagens);
-});
-
-app.MapGet("/api/postagens/{id}", async (int id, DataContext dbContext) =>
-{
-  var postagem = await dbContext.Postagens.FindAsync(id);
-
-  if (postagem == null)
+  if (ids == null)
   {
-    return Results.NotFound();
+    var postagens = await dbContext.Postagens.Where(x => x.Ativo == 1).ToListAsync();
+    return Results.Ok(postagens);
   }
 
-  return Results.Ok(postagem);
+  var splittedIds = ids.Split(',').Select(int.Parse).ToList();
+  var postagensPeloId = dbContext.Postagens.Where(x => splittedIds.Contains(x.Id)).ToList();
+
+  return Results.Ok(postagensPeloId);
 });
 
 app.MapGet("/api/postagens/usuario/{idUsuario}", async (int idUsuario, bool? inactive, DataContext dbContext) =>
