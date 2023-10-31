@@ -109,6 +109,25 @@ app.MapDelete("/api/usuarios/{id}", async (int id, DataContext dbContext) =>
     return Results.NotFound();
   }
 
+  var postagens = await dbContext.Postagens.Where(p => p.IdUsuarioFk == id).ToListAsync();
+  var comentarios = await dbContext.Comentarios.Where(c => c.IdUsuarioFk == id).ToListAsync();
+  var curtidas = await dbContext.Curtidas.Where(c => c.IdUsuarioFk == id).ToListAsync();
+
+  foreach (var postagem in postagens)
+  {
+    dbContext.Postagens.Remove(postagem);
+  }
+
+  foreach (var comentario in comentarios)
+  {
+    dbContext.Comentarios.Remove(comentario);
+  }
+
+  foreach (var curtida in curtidas)
+  {
+    dbContext.Curtidas.Remove(curtida);
+  }
+
   dbContext.Usuarios.Remove(usuario);
   await dbContext.SaveChangesAsync();
   return Results.NoContent();
